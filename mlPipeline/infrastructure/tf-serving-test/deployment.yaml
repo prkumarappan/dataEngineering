@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: half-plus-two
+  namespace: default
+  labels:
+    app: half-plus-two
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: half-plus-two
+  template:
+    metadata:
+      labels:
+        app: half-plus-two
+    spec:
+      containers:
+      - name: tf-serving
+        image: "tensorflow/serving:2.11.0"
+        args:
+        - "--model_name=$(MODEL_NAME)"
+        - "--model_base_path=$(MODEL_PATH)"
+        - "--rest_api_timeout_in_ms=240000"
+        envFrom:
+        - configMapRef:
+            name: tfserving-configs
+        imagePullPolicy: IfNotPresent
+        readinessProbe:
+          httpGet:
+            path: "/v1/models/half-plus-two"
+            port: 8501
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          failureThreshold: 10
+        ports:
+        - name: http
+          containerPort: 8501
+          protocol: TCP
+        - name: grpc
+          containerPort: 8500
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "3"
+            memory: "12Gi"

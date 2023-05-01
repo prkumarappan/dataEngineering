@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tfserving-configs
+data:
+  MODEL_NAME: fashion
+  MODEL_PATH: gs://ml-storage-<PROJECT_ID>/

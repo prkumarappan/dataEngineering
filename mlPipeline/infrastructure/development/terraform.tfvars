@@ -1,0 +1,5 @@
+project_id = "<PROJECT_ID>"
+service_account_name = "terraform-managed"
+credentials_file = "<CREDENTIALS_FILE>"
+region = "us-central1"
+zone = "us-central1-c"
